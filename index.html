@@ -144,7 +144,7 @@ const T={
   marksT:"मुख्य मापे",rearT:"मागील बाजू (अंडाकृती टँक)",sideT:"डावी व उजवी बाजू (दोन्ही सारखी)",
   sideNote:"मागील बाजूच्या तीनही आडव्या रेषा डाव्या व उजव्या बाजूला त्याच उंचीवर पुढे वाढवा.",
   stepsT:"रेषा कशा आखायच्या",edit:"✏️ मापे बदला",print:"🖨️ प्रिंट / PDF",
-  foot:"सर्व मापे मिलिमीटरमध्ये; कंसात फूट-इंच. काही शंका असल्यास डेपो अधिकाऱ्यांशी संपर्क करा.",
+  foot:"सर्व मापे मिलिमीटर (mm) व फूट-इंच मध्ये. काही शंका असल्यास डेपो अधिकाऱ्यांशी संपर्क करा.",
   centre:"मध्य रेषा",upper:"वरची रेषा",lower:"खालची रेषा",
   fromBottom:"टँकच्या तळापासून वर",upFromC:"मध्य रेषेपासून वर",loFromC:"मध्य रेषेपासून खाली",
   upEdge:"वरच्या कडेपासून खाली",loEdge:"खालच्या कडेपासून वर",
@@ -165,7 +165,7 @@ const T={
   marksT:"Main measurements",rearT:"Rear view (oval tank)",sideT:"Left & right side (both same)",
   sideNote:"Extend the three horizontal lines of the rear to the left and right sides at the same height.",
   stepsT:"How to draw the lines",edit:"✏️ Change sizes",print:"🖨️ Print / PDF",
-  foot:"All sizes in millimetres; feet-inches in brackets. For any doubt contact depot officer.",
+  foot:"All sizes in mm and feet-inches. For any doubt contact depot officer.",
   centre:"Centre line",upper:"Upper line",lower:"Lower line",
   fromBottom:"from tank bottom, up",upFromC:"above centre line",loFromC:"below centre line",
   upEdge:"below top edge",loEdge:"above bottom edge",
@@ -184,8 +184,9 @@ const T={
 let LANG=localStorage.getItem('rvmDrvLang')||'mr';
 const $=id=>document.getElementById(id);
 function fi(v){const t=Math.round(v/25.4*2)/2;let f=Math.floor(t/12),i=+(t-f*12).toFixed(1);if(i>=12){f++;i=0;}return f?`${f}' ${i}"`:`${i}"`;}
-const mm=v=>`${Math.round(v)} mm`;
-const both=v=>`${Math.round(v)} mm (${fi(v)})`;
+const mtr=v=>`${Math.round(v)} mm`;
+const mm=v=>`${mtr(v)} · ${fi(v)}`;
+const both=v=>`${mtr(v)} (${fi(v)})`;
 function applyLang(){
   const t=T[LANG]; document.documentElement.lang=LANG;
   document.querySelectorAll('[data-t]').forEach(e=>{const k=e.dataset.t; if(typeof t[k]==='string') e.textContent=t[k];});
@@ -232,10 +233,10 @@ function draw(){
   const up=H*.35, lo=H*.38, upE=H*.15, loE=H*.12, half=H/2;
   $('vehShow').textContent=(veh||'—')+'  ·  '+$('cap').selectedOptions[0].textContent;
   {const lgo=logoCalc(H,vals().cap); window._LG=lgo;
-   const card=(ti,o,pos)=>`<div class="lgc"><div class="t">${ti}</div><div class="v">${o.w} × ${o.h} mm</div><div class="f">${fi(o.w)} × ${fi(o.h)}</div><div class="p">${t.wL} × ${t.hL}</div><div class="p">📍 ${pos}</div></div>`;
+   const card=(ti,o,pos)=>`<div class="lgc"><div class="t">${ti}</div><div class="v">${mtr(o.w)} × ${mtr(o.h)}</div><div class="f">${fi(o.w)} × ${fi(o.h)}</div><div class="p">${t.wL} × ${t.hL}</div><div class="p">📍 ${pos}</div></div>`;
    $('logoBox').innerHTML=`<div class="tier">${t.tierL}: ${lgo.tier}</div><div class="logo-grid">${card(t.sideLogo,lgo.side,t.sidePos)}${card(t.rearLogo,lgo.rear,t.rearPos)}</div>`+(lgo.min?`<div class="warn">⚠ ${t.rearMin}</div>`:lgo.pct<100?`<div class="warn">⚠ ${t.rearRed(lgo.pct)}</div>`:'');}
   const C={c:'#00509D',u:'#1a7f37',l:'#B23A2E'}; const PB='#005EB8';
-  const mk=(col,name,val,sub)=>`<div class="mk"><span class="sw" style="background:${col}"></span><div><b>${name}</b><span class="v">${mm(val)}</span> <span class="fi">(${fi(val)})</span><div class="fi">${sub}</div></div></div>`;
+  const mk=(col,name,val,sub)=>`<div class="mk"><span class="sw" style="background:${col}"></span><div><b>${name}</b><span class="v">${mtr(val)}</span> <span class="fi">(${fi(val)})</span><div class="fi">${sub}</div></div></div>`;
   $('marks').innerHTML=
     mk(C.c,'① '+t.centre,half,t.fromBottom)+
     mk(C.u,'② '+t.upper,up,`${t.upFromC} · ${both(upE)} ${t.upEdge}`)+
@@ -263,7 +264,7 @@ function draw(){
    ${ar(x1+50,yB,yC,'#16212E')}${tx(x1+58,(yB+yC)/2,mm(half),C.c)}${tx(x1+58,(yB+yC)/2+18,'↑ '+(LANG==='mr'?'तळापासून':'from bottom'),'#5B6B7C','start',12)}
    ${ar(x1+50,yT,yC,'#16212E')}${tx(x1+58,(yT+yC)/2,t.height+' '+mm(H),'#16212E','start',13)}
    <line x1="${x0}" y1="${yB+35}" x2="${x1}" y2="${yB+35}" stroke="#16212E" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>${tx(cx,yB+60,t.width+' '+mm(W),'#16212E','middle')}
-   ${tx((x0+x0+e2)/2,yT-14,'200',"#555",'middle',12)}${tx((x1+x1-e2)/2,yT-14,'200',"#555",'middle',12)}
+   ${tx((x0+x0+e2)/2,yT-14,mm(200),"#555",'middle',12)}${tx((x1+x1-e2)/2,yT-14,mm(200),"#555",'middle',12)}
    </svg>`;}
   // ---- side ----
   {const VW=640,VH=330, s=Math.min((VW-150)/L,(VH-120)/H), l=L*s,h=H*s,x0=40,x1=x0+l,yT=50,yB=yT+h,yC=yT+h/2,yU=yC-up*s,yL=yC+lo*s;
@@ -278,8 +279,8 @@ function draw(){
    ${ln(yU,C.u)}${ln(yC,C.c)}${ln(yL,C.l)}
    <line x1="${r}" y1="${yT-25}" x2="${r}" y2="${yB+10}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
    <line x1="${f}" y1="${yT-25}" x2="${f}" y2="${yB+10}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
-   ${(()=>{const g=window._LG.side,lw=g.w*s,lh=g.h*s,lx=f-lw,ly=(yU+yL)/2-lh/2;return `<rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" fill="#FFF3C4" stroke="#0A2647" stroke-width="2" stroke-dasharray="4 3"/>${tx(lx+lw/2,ly+lh/2-2,'LOGO','#0A2647','middle',11)}${tx(lx+lw/2,ly+lh/2+12,g.w+'×'+g.h,'#0A2647','middle',10)}`})()}
-   ${tx(r+4,yT-30,'150 ('+t.rear+')','#555','start',12)}${tx(f-4,yT-30,'300 ('+t.front+')','#555','end',12)}
+   ${(()=>{const g=window._LG.side,lw=g.w*s,lh=g.h*s,lx=f-lw,ly=(yU+yL)/2-lh/2;return `<rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" fill="#FFF3C4" stroke="#0A2647" stroke-width="2" stroke-dasharray="4 3"/>${tx(lx+lw/2,ly+lh/2-2,'LOGO','#0A2647','middle',11)}${tx(lx+lw/2,ly+lh/2+12,mtr(g.w)+'×'+mtr(g.h),'#0A2647','middle',10)}`})()}
+   ${tx(r+4,yT-30,mm(150)+' ('+t.rear+')','#555','start',12)}${tx(f-4,yT-30,mm(300)+' ('+t.front+')','#555','end',12)}
    ${tx(x1+26,yU+5,'② '+mm(up),C.u)}${tx(x1+26,yC+5,'① '+mm(half),C.c)}${tx(x1+26,yL+5,'③ '+mm(lo),C.l)}
    <line x1="${x0}" y1="${yB+35}" x2="${x1}" y2="${yB+35}" stroke="#16212E" stroke-width="2" marker-start="url(#a2)" marker-end="url(#a2)"/>
    ${tx((x0+x1)/2,yB+60,t.length+' '+mm(L),'#16212E','middle')}
