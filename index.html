@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="mr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RVM Marking Guide – Driver</title>
+<style>
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--navy:#0A2647;--blue:#00509D;--yel:#FFC72C;--line:#dfe6ee;--mut:#5B6B7C;--red:#B23A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#F4F7FB;color:#16212E;font:17px/1.5 "Noto Sans Devanagari","Segoe UI",Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:16px 16px 18px}
+header .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+header h1{margin:0;font-size:21px;line-height:1.3}
+header p{margin:6px 0 0;opacity:.9;font-size:14px}
+.lang{display:flex;background:rgba(255,255,255,.15);border-radius:22px;padding:3px;flex:none}
+.lang button{border:0;background:none;color:#fff;font-weight:700;padding:7px 12px;border-radius:18px;font-size:14px;cursor:pointer}
+.lang button.on{background:var(--yel);color:var(--navy)}
+main{max-width:820px;margin:auto;padding:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(10,38,71,.06)}
+h2{margin:0 0 12px;font-size:18px;color:var(--navy);display:flex;align-items:center;gap:8px}
+h2 .n{background:var(--yel);color:var(--navy);width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+label{display:block;font-weight:700;font-size:15.5px;margin:12px 0 5px}
+label small{font-weight:500;color:var(--mut)}
+input{width:100%;padding:14px;font-size:20px;font-weight:700;border:2px solid var(--line);border-radius:12px;background:#FAFCFF}
+input:focus{outline:none;border-color:var(--blue)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.big{width:100%;margin-top:16px;padding:16px;font-size:19px;font-weight:800;border:0;border-radius:14px;background:var(--yel);color:var(--navy);cursor:pointer}
+.res{display:none}
+.vehno{font-size:22px;font-weight:800;text-align:center;color:var(--navy);background:#FFF8E1;border:2px dashed var(--yel);border-radius:12px;padding:8px;margin-bottom:14px}
+.svgbox{overflow-x:auto}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.marks{display:grid;gap:10px}
+.mk{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.mk .sw{width:10px;align-self:stretch;border-radius:6px;flex:none}
+.mk b{display:block;font-size:16px}
+.mk .v{font-size:22px;font-weight:800;color:var(--blue)}
+.mk .fi{font-size:15px;color:var(--mut);font-weight:700}
+ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:10px 10px 10px 48px;border-bottom:1px dashed var(--line);font-size:16.5px}
+ol.steps li:before{content:counter(s);position:absolute;left:6px;top:9px;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+ol.steps b{color:var(--blue)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btns button{padding:14px;font-size:16px;font-weight:800;border-radius:12px;cursor:pointer;border:2px solid var(--navy)}
+.b1{background:#fff;color:var(--navy)}.b2{background:var(--navy);color:#fff}
+.legend{display:grid;gap:6px;margin-top:10px}.lg{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700}.lg i{width:34px;height:22px;border-radius:5px;border:2px solid #0A2647;flex:none}.lg .bl{background:repeating-linear-gradient(45deg,#005EB8 0 6px,#4d8fd6 6px 9px)}.lg .wh{background:#fff}
+.units{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.units button{padding:12px 4px;font-size:16px;font-weight:800;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);cursor:pointer}
+.units button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+select{width:100%;padding:14px;font-size:19px;font-weight:700;border:2px solid var(--line);border-radius:12px;background:#FAFCFF}
+.dr{display:flex;gap:8px}.dr input{flex:1}.inbox{display:none;max-width:42%}
+.ftin .inbox{display:block}
+.conv{font-size:14px;color:var(--blue);font-weight:700;margin-top:4px;min-height:20px}
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lgc{border:2px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.lgc .t{font-size:14px;color:var(--mut);font-weight:700}
+.lgc .v{font-size:21px;font-weight:800;color:var(--blue)}
+.lgc .f{font-size:15px;font-weight:700;color:var(--navy)}
+.lgc .p{font-size:13px;color:var(--mut);margin-top:4px}
+.tier{background:#FFF8E1;border-radius:10px;padding:8px 10px;font-weight:700;margin-bottom:10px;text-align:center}
+.warn{color:var(--red);font-weight:700;font-size:14px;margin-top:8px}
+@media(max-width:480px){.logo-grid{grid-template-columns:1fr}}
+.note{font-size:14px;color:var(--mut);margin-top:8px}
+.err{color:var(--red);font-weight:700;margin-top:8px;display:none}
+@media(max-width:480px){.g2{grid-template-columns:1fr}}
+@media print{
+  header .lang,.no-print,#inputCard{display:none!important}
+  body{background:#fff;font-size:13px}
+  .card{box-shadow:none;break-inside:avoid;padding:10px;margin-bottom:8px}
+  .res{display:block!important}
+  @page{size:A4;margin:10mm}
+}
+</style></head>
+<body>
+<header>
+  <div class="top">
+    <h1 data-t="title"></h1>
+    <div class="lang"><button data-l="mr">मराठी</button><button data-l="en">English</button></div>
+  </div>
+  <p data-t="sub"></p>
+</header>
+<main>
+  <div class="card" id="inputCard">
+    <h2><span class="n">1</span><span data-t="enter"></span></h2>
+    <label data-t="unitL"></label>
+    <div class="units" id="units">
+      <button type="button" data-u="mm">mm</button><button type="button" data-u="cm">cm</button><button type="button" data-u="in">inch</button><button type="button" data-u="ftin" data-t="ftinB"></button>
+    </div>
+    <label data-t="veh"></label>
+    <input id="veh" type="text" placeholder="MH24AB6060" style="text-transform:uppercase">
+    <label data-t="cap"></label>
+    <select id="cap">
+      <option value="10" data-t="capLt12"></option><option value="12">12 KL</option><option value="14">14 KL</option><option value="18">18 KL</option><option value="19">19 KL</option><option value="20" selected>20 KL</option><option value="22">22 KL</option><option value="24">24 KL</option><option value="26" data-t="capGt24"></option>
+    </select>
+    <div class="dim" data-k="H"><label><span data-t="H"></span> <small class="ul"></small></label><div class="dr"><input id="H" type="number" inputmode="decimal" step="any"><input id="H_in" class="inbox" type="number" inputmode="decimal" step="any" placeholder="inch"></div><div class="conv" id="H_cv"></div></div>
+    <div class="dim" data-k="W"><label><span data-t="W"></span> <small class="ul"></small></label><div class="dr"><input id="W" type="number" inputmode="decimal" step="any"><input id="W_in" class="inbox" type="number" inputmode="decimal" step="any" placeholder="inch"></div><div class="conv" id="W_cv"></div></div>
+    <div class="dim" data-k="L"><label><span data-t="L"></span> <small class="ul"></small></label><div class="dr"><input id="L" type="number" inputmode="decimal" step="any"><input id="L_in" class="inbox" type="number" inputmode="decimal" step="any" placeholder="inch"></div><div class="conv" id="L_cv"></div></div>
+    <div class="err" id="err" data-t="err"></div>
+    <button class="big" id="go" data-t="show"></button>
+  </div>
+
+  <div class="res" id="res">
+    <div class="vehno" id="vehShow"></div>
+
+    <div class="card">
+      <h2><span class="n">2</span><span data-t="marksT"></span></h2>
+      <div class="marks" id="marks"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">★</span><span data-t="logoT"></span></h2>
+      <div id="logoBox"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span><span data-t="rearT"></span></h2>
+      <div class="svgbox" id="rearSvg"></div>
+      <div class="legend" id="rearLeg"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">4</span><span data-t="sideT"></span></h2>
+      <div class="svgbox" id="sideSvg"></div>
+      <div class="legend" id="sideLeg"></div>
+      <div class="note" data-t="sideNote"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">5</span><span data-t="stepsT"></span></h2>
+      <ol class="steps" id="steps"></ol>
+    </div>
+
+    <div class="btns no-print">
+      <button class="b1" id="edit" data-t="edit"></button>
+      <button class="b2" onclick="window.print()" data-t="print"></button>
+    </div>
+    <p class="note" data-t="foot"></p>
+  </div>
+</main>
+<script>
+const T={
+ mr:{title:"टँकर RVM मार्किंग मार्गदर्शक",sub:"टँकची मापे टाका – रेषा कुठे आखायच्या ते लगेच दिसेल",
+  enter:"टँकची मापे टाका",unitL:"मापाचे एकक निवडा",ftinB:"फूट+इंच",cap:"टँकरची क्षमता (KL)",capLt12:"12 KL पेक्षा कमी",capGt24:"24 KL पेक्षा जास्त",logoT:"BPCL लोगो साईझ",tierL:"क्षमता गट",sideLogo:"बाजूचा लोगो (डावी/उजवी)",rearLogo:"मागचा लोगो",wL:"रुंदी",hL:"उंची",sidePos:"पुढच्या टोकापासून 300 mm, ② आणि ③ च्या मध्ये",rearPos:"मागे डाव्या बाजूला, ② रेषेखाली",rearRed:(p)=>`मागे जागा कमी असल्याने लोगो ${p}% केला आहे`,rearMin:"मागे जागा खूप कमी – किमान साईझ वापरा, डेपो अधिकाऱ्यांना कळवा",veh:"गाडी क्रमांक (TT No.)",H:"टँकची उंची",W:"टँकची रुंदी",L:"टँकची लांबी",mm:"(मिमी)",
+  err:"कृपया उंची, रुंदी व लांबी तिन्ही मापे टाका.",show:"✅ मार्किंग दाखवा",
+  marksT:"मुख्य मापे",rearT:"मागील बाजू (अंडाकृती टँक)",sideT:"डावी व उजवी बाजू (दोन्ही सारखी)",
+  sideNote:"मागील बाजूच्या तीनही आडव्या रेषा डाव्या व उजव्या बाजूला त्याच उंचीवर पुढे वाढवा.",
+  stepsT:"रेषा कशा आखायच्या",edit:"✏️ मापे बदला",print:"🖨️ प्रिंट / PDF",
+  foot:"सर्व मापे मिलिमीटरमध्ये; कंसात फूट-इंच. काही शंका असल्यास डेपो अधिकाऱ्यांशी संपर्क करा.",
+  centre:"मध्य रेषा",upper:"वरची रेषा",lower:"खालची रेषा",
+  fromBottom:"टँकच्या तळापासून वर",upFromC:"मध्य रेषेपासून वर",loFromC:"मध्य रेषेपासून खाली",
+  upEdge:"वरच्या कडेपासून खाली",loEdge:"खालच्या कडेपासून वर",
+  rearEdge:"मागच्या टोकापासून",frontEdge:"पुढच्या टोकापासून",sideEdge:"दोन्ही कडांपासून आत",
+  height:"उंची",width:"रुंदी",length:"लांबी",rear:"मागे",front:"पुढे",
+  s1:(v)=>`टँकच्या <b>तळापासून ${v.half}</b> वर मोजा आणि <b>मध्य रेषा</b> आखा.`,
+  s2:(v)=>`मध्य रेषेपासून <b>${v.up} वर</b> <b>वरची रेषा</b> आखा. (तपासा: वरच्या कडेपासून ${v.upE} खाली येईल)`,
+  s3:(v)=>`मध्य रेषेपासून <b>${v.lo} खाली</b> <b>खालची रेषा</b> आखा. (तपासा: खालच्या कडेपासून ${v.loE} वर येईल)`,
+  s4:(v)=>`मागील बाजूस डाव्या व उजव्या कडांपासून <b>${v.e200} आत</b> उभ्या रेषा आखा.`,
+  s5:(v)=>`डाव्या व उजव्या बाजूला याच तीन आडव्या रेषा संपूर्ण लांबीवर आखा.`,
+  pB:"निळा रंग – PMS 300C",pW:"पांढरा रंग",rBlue:"वरच्या रेषेच्या (②) वर",rWhite:"वरच्या रेषेच्या (②) खाली संपूर्ण भाग",sBlue:"② च्या वर आणि ③ च्या खाली",sWhite:"② आणि ③ च्या मधला भाग",
+  s7:(v)=>`<b>मागील बाजू:</b> वरच्या रेषेच्या (②) वरचा भाग <b>निळा (PMS 300C)</b>; त्याखालील सर्व भाग (③ च्या खालीही) <b>पांढरा</b>.`,
+  s8:(v)=>`<b>डावी/उजवी बाजू:</b> ② च्या वर आणि ③ च्या खाली <b>निळा (PMS 300C)</b>; मधला भाग <b>पांढरा</b>.`,
+  s6:(v)=>`बाजूला <b>मागच्या टोकापासून ${v.e150}</b> व <b>पुढच्या टोकापासून ${v.e300}</b> वर उभ्या रेषा आखा.`},
+ en:{title:"Tanker RVM Marking Guide",sub:"Enter tank sizes – see where to draw the lines",
+  enter:"Enter tank sizes",unitL:"Select measuring unit",ftinB:"ft+inch",cap:"Tanker capacity (KL)",capLt12:"Less than 12 KL",capGt24:"More than 24 KL",logoT:"BPCL Logo size",tierL:"Capacity group",sideLogo:"Side logo (Left/Right)",rearLogo:"Rear logo",wL:"Width",hL:"Height",sidePos:"300 mm from front end, between ② and ③",rearPos:"Rear left side, below line ②",rearRed:(p)=>`Rear space is less – logo reduced to ${p}%`,rearMin:"Rear space too small – use minimum size, inform depot officer",veh:"Vehicle No. (TT No.)",H:"Tank height",W:"Tank width",L:"Tank length",mm:"(mm)",
+  err:"Please enter height, width and length.",show:"✅ Show marking",
+  marksT:"Main measurements",rearT:"Rear view (oval tank)",sideT:"Left & right side (both same)",
+  sideNote:"Extend the three horizontal lines of the rear to the left and right sides at the same height.",
+  stepsT:"How to draw the lines",edit:"✏️ Change sizes",print:"🖨️ Print / PDF",
+  foot:"All sizes in millimetres; feet-inches in brackets. For any doubt contact depot officer.",
+  centre:"Centre line",upper:"Upper line",lower:"Lower line",
+  fromBottom:"from tank bottom, up",upFromC:"above centre line",loFromC:"below centre line",
+  upEdge:"below top edge",loEdge:"above bottom edge",
+  rearEdge:"from rear end",frontEdge:"from front end",sideEdge:"in from both edges",
+  height:"Height",width:"Width",length:"Length",rear:"Rear",front:"Front",
+  s1:(v)=>`Measure <b>${v.half} up from the tank bottom</b> and draw the <b>centre line</b>.`,
+  s2:(v)=>`Draw the <b>upper line ${v.up} above</b> the centre line. (Check: ${v.upE} below top edge)`,
+  s3:(v)=>`Draw the <b>lower line ${v.lo} below</b> the centre line. (Check: ${v.loE} above bottom edge)`,
+  s4:(v)=>`On the rear, draw vertical lines <b>${v.e200} in</b> from the left and right edges.`,
+  s5:(v)=>`On the left and right sides, draw the same three horizontal lines along the full length.`,
+  pB:"Blue – PMS 300C",pW:"White",rBlue:"Above upper line (②)",rWhite:"Everything below upper line (②)",sBlue:"Above ② and below ③",sWhite:"Between ② and ③",
+  s7:(v)=>`<b>Rear:</b> paint <b>Blue (PMS 300C)</b> above the upper line (②); everything below it (including below ③) <b>White</b>.`,
+  s8:(v)=>`<b>Left/Right sides:</b> paint <b>Blue (PMS 300C)</b> above ② and below ③; middle band <b>White</b>.`,
+  s6:(v)=>`On the sides, draw vertical lines <b>${v.e150} from the rear end</b> and <b>${v.e300} from the front end</b>.`}
+};
+let LANG=localStorage.getItem('rvmDrvLang')||'mr';
+const $=id=>document.getElementById(id);
+function fi(v){const t=Math.round(v/25.4*2)/2;let f=Math.floor(t/12),i=+(t-f*12).toFixed(1);if(i>=12){f++;i=0;}return f?`${f}' ${i}"`:`${i}"`;}
+const mm=v=>`${Math.round(v)} mm`;
+const both=v=>`${Math.round(v)} mm (${fi(v)})`;
+function applyLang(){
+  const t=T[LANG]; document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-t]').forEach(e=>{const k=e.dataset.t; if(typeof t[k]==='string') e.textContent=t[k];});
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
+  if(typeof setUnit==='function'&&document.querySelector('.dim .ul')) setUnit(UNIT,false);
+  if($('res').style.display==='block') draw();
+}
+let UNIT=localStorage.getItem('rvmDrvUnit')||'mm';
+const UF={mm:1,cm:10,in:25.4};
+function toMM(k){const a=parseFloat($(k).value)||0; if(UNIT==='ftin') return (a*12+(parseFloat($(k+'_in').value)||0))*25.4; return a*UF[UNIT];}
+function setFromMM(k,v){ if(!(v>0)){$(k).value='';$(k+'_in').value='';return;}
+  if(UNIT==='ftin'){const t=v/25.4;let f=Math.floor(t/12),i=Math.round((t-f*12)*2)/2;if(i>=12){f++;i=0;}$(k).value=f;$(k+'_in').value=i;}
+  else $(k).value=+(v/UF[UNIT]).toFixed(UNIT==='mm'?0:1);}
+const PH={mm:{H:'1550',W:'2500',L:'6170'},cm:{H:'155',W:'250',L:'617'},in:{H:'61',W:'98.4',L:'243'},ftin:{H:'ft',W:'ft',L:'ft'}};
+function setUnit(u,convert){
+  const old={H:toMM('H'),W:toMM('W'),L:toMM('L')};
+  UNIT=u; localStorage.setItem('rvmDrvUnit',u);
+  document.querySelectorAll('#units button').forEach(b=>b.classList.toggle('on',b.dataset.u===u));
+  const lbl={mm:'(mm)',cm:'(cm)',in:'(inch)',ftin:LANG==='mr'?'(फूट + इंच)':'(feet + inch)'}[u];
+  document.querySelectorAll('.dim').forEach(d=>{d.classList.toggle('ftin',u==='ftin');d.querySelector('.ul').textContent=lbl;const k=d.dataset.k;$(k).placeholder=PH[u][k];});
+  if(convert) ['H','W','L'].forEach(k=>setFromMM(k,old[k]));
+  showConv();
+}
+function showConv(){['H','W','L'].forEach(k=>{const v=toMM(k);$(k+'_cv').textContent=v>0?`= ${Math.round(v)} mm  |  ${fi(v)}`:'';});}
+function vals(){return{H:toMM('H'),W:toMM('W'),L:toMM('L'),cap:+$('cap').value,veh:$('veh').value.trim().toUpperCase()};}
+function logoCalc(H,cap){
+  let tier,base;
+  if(cap>=22){tier='22 KL +';base={w:644,h:900};}
+  else if(cap>=18){tier='18 – 20 KL';base={w:550,h:765};}
+  else if(cap>=12){tier='12 – 17 KL';base={w:550,h:765};}
+  else {tier='< 12 KL';base={w:414,h:575};}
+  const MIN={w:414,h:575};
+  const panel=Math.round(H*.35)+Math.round(H*.38);
+  const clr=H>1700?150:H>=1601?125:H>=1501?100:75;
+  let x1=(panel-clr-600-50-200-100-50)/2; if(x1<0)x1=10;
+  const avail=panel-clr-150-x1-50;
+  let rear={...base},pct=100,min=false;
+  if(avail<base.h){pct=Math.max(0,Math.floor(avail/base.h*100/5)*5);const r={w:Math.round(base.w*pct/100),h:Math.round(base.h*pct/100)};
+    if(r.h>=MIN.h) rear=r; else {rear={...MIN};min=true;pct=Math.round(MIN.h/base.h*100);}}
+  return{tier,side:base,rear,pct,min};
+}
+function draw(){
+  const {H,W,L,veh}=vals(), t=T[LANG];
+  const up=H*.35, lo=H*.38, upE=H*.15, loE=H*.12, half=H/2;
+  $('vehShow').textContent=(veh||'—')+'  ·  '+$('cap').selectedOptions[0].textContent;
+  {const lgo=logoCalc(H,vals().cap); window._LG=lgo;
+   const card=(ti,o,pos)=>`<div class="lgc"><div class="t">${ti}</div><div class="v">${o.w} × ${o.h} mm</div><div class="f">${fi(o.w)} × ${fi(o.h)}</div><div class="p">${t.wL} × ${t.hL}</div><div class="p">📍 ${pos}</div></div>`;
+   $('logoBox').innerHTML=`<div class="tier">${t.tierL}: ${lgo.tier}</div><div class="logo-grid">${card(t.sideLogo,lgo.side,t.sidePos)}${card(t.rearLogo,lgo.rear,t.rearPos)}</div>`+(lgo.min?`<div class="warn">⚠ ${t.rearMin}</div>`:lgo.pct<100?`<div class="warn">⚠ ${t.rearRed(lgo.pct)}</div>`:'');}
+  const C={c:'#00509D',u:'#1a7f37',l:'#B23A2E'}; const PB='#005EB8';
+  const mk=(col,name,val,sub)=>`<div class="mk"><span class="sw" style="background:${col}"></span><div><b>${name}</b><span class="v">${mm(val)}</span> <span class="fi">(${fi(val)})</span><div class="fi">${sub}</div></div></div>`;
+  $('marks').innerHTML=
+    mk(C.c,'① '+t.centre,half,t.fromBottom)+
+    mk(C.u,'② '+t.upper,up,`${t.upFromC} · ${both(upE)} ${t.upEdge}`)+
+    mk(C.l,'③ '+t.lower,lo,`${t.loFromC} · ${both(loE)} ${t.loEdge}`);
+  // ---- rear oval ----
+  {const VW=640,VH=520,m=95, s=Math.min((VW-2*m-60)/W,(VH-150)/H), w=W*s,h=H*s,x0=(VW-w)/2-70,x1=x0+w,cx=(x0+x1)/2,yT=55,yB=yT+h,yC=yT+h/2,yU=yC-up*s,yL=yC+lo*s,b=h*.275;
+   const p=`M${x0},${yT+b} C${x0},${yT+b*.25} ${x0+w*.18},${yT} ${cx},${yT} C${x1-w*.18},${yT} ${x1},${yT+b*.25} ${x1},${yT+b} L${x1},${yB-b} C${x1},${yB-b*.25} ${x1-w*.18},${yB} ${cx},${yB} C${x0+w*.18},${yB} ${x0},${yB-b*.25} ${x0},${yB-b} Z`;
+   const e2=200*s;
+   const ln=(y,c,d)=>`<line x1="${x0-30}" y1="${y}" x2="${x1+30}" y2="${y}" stroke="#fff" stroke-width="6"/><line x1="${x0-30}" y1="${y}" x2="${x1+30}" y2="${y}" stroke="${c}" stroke-width="3" ${d?'stroke-dasharray="10 6"':''}/>`;
+   const ar=(x,y1,y2,c)=>`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${c}" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>`;
+   const tx=(x,y,s2,c,a='start',fs=15)=>`<text x="${x}" y="${y}" fill="${c}" font-size="${fs}" text-anchor="${a}">${s2}</text>`;
+   $('rearSvg').innerHTML=`<svg viewBox="0 0 ${VW} ${VH}"><defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse"><path d="M8,4L0,0L0,8Z" fill="#16212E"/></marker><pattern id="hbr" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#005EB8"/><line x1="0" y1="0" x2="0" y2="12" stroke="#4d8fd6" stroke-width="4"/></pattern><clipPath id="cr"><path d="${p}"/></clipPath></defs>
+   <path d="${p}" fill="#FFFFFF"/>
+   <rect x="${x0-5}" y="${yT-5}" width="${w+10}" height="${yU-yT+5}" fill="url(#hbr)" clip-path="url(#cr)"/>
+   <path d="${p}" fill="none" stroke="#0A2647" stroke-width="5"/>
+   ${ln(yU,C.u,1)}${ln(yC,C.c,1)}${ln(yL,C.l,1)}
+   <line x1="${cx}" y1="${yT-15}" x2="${cx}" y2="${yB+15}" stroke="#00509D" stroke-width="2" stroke-dasharray="8 6"/>
+   <line x1="${x0+e2}" y1="${yT+8}" x2="${x0+e2}" y2="${yB-8}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
+   <line x1="${x1-e2}" y1="${yT+8}" x2="${x1-e2}" y2="${yB-8}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
+   ${tx(x0-34,yU+5,'②',C.u,'end',20)}${tx(x0-34,yC+5,'①',C.c,'end',20)}${tx(x0-34,yL+5,'③',C.l,'end',20)}
+   ${ar(cx+14,yC,yU,'#16212E')}${tx(cx+22,(yC+yU)/2+5,mm(up),C.u)}
+   ${ar(cx+14,yC,yL,'#16212E')}${tx(cx+22,(yC+yL)/2+5,mm(lo),C.l)}
+   ${ar(cx-14,yU,yT,'#16212E')}${tx(cx-22,(yU+yT)/2+5,mm(upE),'#16212E','end',13)}
+   ${ar(cx-14,yL,yB,'#16212E')}${tx(cx-22,(yL+yB)/2+5,mm(loE),'#16212E','end',13)}
+   ${ar(x1+50,yB,yC,'#16212E')}${tx(x1+58,(yB+yC)/2,mm(half),C.c)}${tx(x1+58,(yB+yC)/2+18,'↑ '+(LANG==='mr'?'तळापासून':'from bottom'),'#5B6B7C','start',12)}
+   ${ar(x1+50,yT,yC,'#16212E')}${tx(x1+58,(yT+yC)/2,t.height+' '+mm(H),'#16212E','start',13)}
+   <line x1="${x0}" y1="${yB+35}" x2="${x1}" y2="${yB+35}" stroke="#16212E" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>${tx(cx,yB+60,t.width+' '+mm(W),'#16212E','middle')}
+   ${tx((x0+x0+e2)/2,yT-14,'200',"#555",'middle',12)}${tx((x1+x1-e2)/2,yT-14,'200',"#555",'middle',12)}
+   </svg>`;}
+  // ---- side ----
+  {const VW=640,VH=330, s=Math.min((VW-150)/L,(VH-120)/H), l=L*s,h=H*s,x0=40,x1=x0+l,yT=50,yB=yT+h,yC=yT+h/2,yU=yC-up*s,yL=yC+lo*s;
+   const ln=(y,c)=>`<line x1="${x0-20}" y1="${y}" x2="${x1+20}" y2="${y}" stroke="#fff" stroke-width="6"/><line x1="${x0-20}" y1="${y}" x2="${x1+20}" y2="${y}" stroke="${c}" stroke-width="3" stroke-dasharray="10 6"/>`;
+   const tx=(x,y,s2,c,a='start',fs=14)=>`<text x="${x}" y="${y}" fill="${c}" font-size="${fs}" text-anchor="${a}">${s2}</text>`;
+   const r=x0+150*s, f=x1-300*s;
+   $('sideSvg').innerHTML=`<svg viewBox="0 0 ${VW} ${VH}"><defs><marker id="a2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse"><path d="M8,4L0,0L0,8Z" fill="#16212E"/></marker><pattern id="hbs" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#005EB8"/><line x1="0" y1="0" x2="0" y2="12" stroke="#4d8fd6" stroke-width="4"/></pattern><clipPath id="cs"><rect x="${x0}" y="${yT}" width="${l}" height="${h}" rx="${Math.min(h*.15,24)}"/></clipPath></defs>
+   <rect x="${x0}" y="${yT}" width="${l}" height="${h}" rx="${Math.min(h*.15,24)}" fill="#FFFFFF"/>
+   <rect x="${x0-5}" y="${yT-5}" width="${l+10}" height="${yU-yT+5}" fill="url(#hbs)" clip-path="url(#cs)"/>
+   <rect x="${x0-5}" y="${yL}" width="${l+10}" height="${yB-yL+5}" fill="url(#hbs)" clip-path="url(#cs)"/>
+   <rect x="${x0}" y="${yT}" width="${l}" height="${h}" rx="${Math.min(h*.15,24)}" fill="none" stroke="#0A2647" stroke-width="5"/>
+   ${ln(yU,C.u)}${ln(yC,C.c)}${ln(yL,C.l)}
+   <line x1="${r}" y1="${yT-25}" x2="${r}" y2="${yB+10}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
+   <line x1="${f}" y1="${yT-25}" x2="${f}" y2="${yB+10}" stroke="#888" stroke-width="2" stroke-dasharray="5 5"/>
+   ${(()=>{const g=window._LG.side,lw=g.w*s,lh=g.h*s,lx=f-lw,ly=(yU+yL)/2-lh/2;return `<rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" fill="#FFF3C4" stroke="#0A2647" stroke-width="2" stroke-dasharray="4 3"/>${tx(lx+lw/2,ly+lh/2-2,'LOGO','#0A2647','middle',11)}${tx(lx+lw/2,ly+lh/2+12,g.w+'×'+g.h,'#0A2647','middle',10)}`})()}
+   ${tx(r+4,yT-30,'150 ('+t.rear+')','#555','start',12)}${tx(f-4,yT-30,'300 ('+t.front+')','#555','end',12)}
+   ${tx(x1+26,yU+5,'② '+mm(up),C.u)}${tx(x1+26,yC+5,'① '+mm(half),C.c)}${tx(x1+26,yL+5,'③ '+mm(lo),C.l)}
+   <line x1="${x0}" y1="${yB+35}" x2="${x1}" y2="${yB+35}" stroke="#16212E" stroke-width="2" marker-start="url(#a2)" marker-end="url(#a2)"/>
+   ${tx((x0+x1)/2,yB+60,t.length+' '+mm(L),'#16212E','middle')}
+   </svg>`;}
+  const v={half:both(half),up:both(up),lo:both(lo),upE:both(upE),loE:both(loE),e200:both(200),e150:both(150),e300:both(300)};
+  const lg=(c,a,b)=>`<div class="lg"><i class="${c}"></i><span>${a}: ${b}</span></div>`;
+  $('rearLeg').innerHTML=lg('bl',t.pB,t.rBlue)+lg('wh',t.pW,t.rWhite);
+  $('sideLeg').innerHTML=lg('bl',t.pB,t.sBlue)+lg('wh',t.pW,t.sWhite);
+  $('steps').innerHTML=['s1','s2','s3','s4','s5','s6','s7','s8'].map(k=>`<li>${t[k](v)}</li>`).join('');
+}
+$('go').onclick=()=>{
+  const {H,W,L}=vals();
+  if(!(H>0&&W>0&&L>0)){$('err').style.display='block';return;}
+  $('err').style.display='none';
+  localStorage.setItem('rvmDrv_veh',$('veh').value);localStorage.setItem('rvmDrv_cap',$('cap').value);['H','W','L'].forEach(k=>localStorage.setItem('rvmDrvMM_'+k,toMM(k)));
+  $('res').style.display='block'; draw();
+  setTimeout(()=>$('res').scrollIntoView({behavior:'smooth'}),100);
+};
+$('edit').onclick=()=>{$('inputCard').scrollIntoView({behavior:'smooth'});$('H').focus();};
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{LANG=b.dataset.l;localStorage.setItem('rvmDrvLang',LANG);applyLang();});
+applyLang();
+{const v=localStorage.getItem('rvmDrv_veh'); if(v) $('veh').value=v; const c=localStorage.getItem('rvmDrv_cap'); if(c) $('cap').value=c;}
+setUnit(UNIT,false);
+['H','W','L'].forEach(k=>{const v=+localStorage.getItem('rvmDrvMM_'+k)||+localStorage.getItem('rvmDrv_'+k); if(v>0) setFromMM(k,v);});
+showConv();
+document.querySelectorAll('#units button').forEach(b=>b.onclick=()=>setUnit(b.dataset.u,true));
+['H','W','L','H_in','W_in','L_in'].forEach(k=>{$(k).addEventListener('input',showConv);$(k).addEventListener('keydown',e=>{if(e.key==='Enter')$('go').click();});});
+$('cap').addEventListener('change',()=>{if($('res').style.display==='block')draw();});
+</script>
+</body></html>
